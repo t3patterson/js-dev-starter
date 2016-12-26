@@ -19,3 +19,15 @@ describe('index.html copy', ()=>{
       })
    })
 })
+
+describe('index.html copy', ()=>{
+   it('should say "hello"', (done)=>{
+      const index = fs.readFileSync('./src/index.html', 'utf-8')
+      jsdom.env(index, function(err, vWindow){
+         const h2 = vWindow.document.getElementsByTagName('h1')[0];
+         expect(h2.innerHTML).to.equal("wow")
+         done();
+         vWindow.close()
+      })
+   })
+})
