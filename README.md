@@ -218,3 +218,14 @@ language: node_js
 node_js: 
   - "6"
 ```
+
+### HTTP Calls
+- Node : http, request
+- Browser : XMLHttpRequest, jQuery, Fetch
+- Node + Browser : isomorphic-fetch,  xhr, Axios
+
+####Centralizing API Calls
+- Configure all calls
+- Handle preloader logic
+- Handle errors
+- Single seam for mocking
