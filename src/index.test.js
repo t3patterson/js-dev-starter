@@ -8,24 +8,12 @@ describe('Our first test', ()=>{
    });
 });
 
-describe('index.html copy', ()=>{
-   it('should say "hello"', (done)=>{
+describe('index.html', ()=>{
+   it('should have <h1> with Users', (done)=>{
       const index = fs.readFileSync('./src/index.html', 'utf-8')
       jsdom.env(index, function(err, vWindow){
          const h1 = vWindow.document.getElementsByTagName('h1')[0];
-         expect(h1.innerHTML).to.equal("Halllllooo baby shamppoo")
-         done();
-         vWindow.close()
-      })
-   })
-})
-
-describe('index.html copy', ()=>{
-   it('should say "hello"', (done)=>{
-      const index = fs.readFileSync('./src/index.html', 'utf-8')
-      jsdom.env(index, function(err, vWindow){
-         const h2 = vWindow.document.getElementsByTagName('h2')[0];
-         expect(h2.innerHTML).to.equal("wow")
+         expect(h1.innerHTML).to.equal("Users")
          done();
          vWindow.close()
       })

@@ -229,3 +229,90 @@ node_js:
 - Handle preloader logic
 - Handle errors
 - Single seam for mocking
+
+### Mock HTTP for Fake Data
+####Why Fake Data?
+  - empty lists
+  - long lists
+  - long values
+  - testing
+  - filtering
+  - sorting
+
+#### Fake Data Schema
+  - JSON Schema faker (jsf)
+
+#### Fake Values
+  - faker.js
+
+#### (real) Fake Server
+  - json-server
+
+##### in `mock-data-schema.js`
+```
+  export const schema = {
+  	"type": "object",
+  	"properties": {
+  		"users" : {
+  			"type" : "array",
+  			"minItems" : 3,
+  			"maxItems" : 5,
+  			"items": {
+  				"type" : "object",
+  				"properties" : {
+  					"id" : {"type": "number", "unique" : true , "minimum" : 1 },
+  					"firstName" : {"type": "string", "faker" : "name.firstName" },
+  					"lastName" : {"type": "string", "faker" : "name.lastName" },
+  					"email" : {"type": "string", "faker" : "internet.email" },
+  				}
+  			}
+  		},
+  		required: ['id', 'firstName', 'lastName', 'email']
+  	},
+  	required: ['users']
+  }
+  ```
+
+
+##### in `mock-data-generate-data.js` 
+
+```
+import fs from 'fs';
+import chalk from 'chalk';
+import jsf from 'json-schema-faker';
+import {schema} from './mock-data-schema.js';
+
+const jsonStr = JSON.stringify( jsf(schema) )
+
+
+/* eslint-disable no-console */
+
+fs.writeFile("./src/api/db.json", jsonStr, function(err){
+   if(err){
+      return console.log(chalk.red(err))
+   } else {
+      console.log(chalk.green("√ Mock data generated"))
+   }
+})
+```
+
+##### in the scripts of `package.json`
+```
+...
+"generate-mock-data" : "babel-node /path/to/mock-data-generate-data.js",
+"json-server" : "json-server --watch /path/to/api/db.json --port 4000"
+...
+```
+
+##### create `apiConfig` to point to server-json in dev environment
+```
+let apiConfig = {
+   productionBaseUrl: "/",
+   developmentBaseUrl: "http://localhost:4000"
+}
+
+export function getBaseURL(){
+   let inDevEnvironment = window.location.hostname === 'localhost'
+   return inDevEnvironment ? apiConfig.developmentBaseUrl : apiConfig.productionBaseUrl
+}
+```
