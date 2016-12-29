@@ -1,9 +1,9 @@
 import fs from 'fs';
 import chalk from 'chalk';
 import jsf from 'json-schema-faker';
-import {schema} from './mock-data-schema.js';
+import {apiSchema} from './mock-data-schema.js';
 
-const jsonStr = JSON.stringify( jsf(schema) )
+const jsonStr = JSON.stringify( jsf(apiSchema) )
 
 
 /* eslint-disable no-console */

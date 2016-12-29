@@ -316,3 +316,162 @@ export function getBaseURL(){
    return inDevEnvironment ? apiConfig.developmentBaseUrl : apiConfig.productionBaseUrl
 }
 ```
+
+### The Demo App
+Contains Examples of :
++ Directory structure + filenaming
++ Framework usage
++ Testing
++ Mock API
++ Automated deployment 
++ Reflects coding standards
++ Interactive example of working with starter-kit
+
+#### Tips
+- put js in a `.js` file (never `<script>`)
+- organize by feature, not file-type
+- extract logic to javascript objects
+
+### Minification
+- speed page loads by removing comments, newlines, whitespace, shortening function/var names
+- occasionally dead code elimination
+
+
+### Production Server
++ create `dist-server.js`
+  - eliminate webpack setup
+  - add `compression()` middleware to gzip
+    - `app.use( compression() )`
+  - serve static files from `/dist`
+    - `app.use( express.static('/dist') )`
+
++ configure `wepback.config.prod.js`
+  ```
+   ...
+   devtool: 'source-map',
+   plugins: [
+      new webpack.optimize.DedupePlugin(),
+      new webpack.optimize.UglifyJsPlugin()
+   ]
+  ...
+  ```
+
++ create `build.js`
+  ```
+  import webpack from 'webpack';
+  import webpackProdConfig from '../webpack.config.prod.js';
+  import chalk from 'chalk'
+
+
+  process.env.NODE_ENV = 'production'
+
+  console.log(chalk.blue('Generating minified bundle for production. This will take a moment.'))
+
+  webpack(webpackProdConfig).run( (err)=> {
+     if(err){
+        console.log(chalk.red(err))
+        return 1;
+     }
+
+     console.log(chalk.green('You app has been built for production and written to /dist'))
+
+     return 0;
+  })
+
+  ``` 
+
+### Dynamic HTML
++ in `webpack.config.prod.js` and `webpack.config.dev.js`
+```
+  import HtmlWebpackPlugin from 'html-webpack-plugin'
+  ...
+  plugins: [
+    new HtmlWebpackPlugin({
+        template: 'src/index.html',
+        inject: true,
+        minify: {
+           removeComments: true,
+           collapseWhitespace: true
+        }
+     })
+  ...
+  ]
+```
+
+### Bundle Splitting
++ in `src`, create `vendor.js` and list vendor libs
+```
+import fetch from 'whatwg-fetch';
+import react from 'react';
+...
+
+``` 
+
++ in `webpack.config.dev.js`
+```
+  entry: {
+     main: path.resolve(__dirname, 'src/index'),
+     vendor: path.resolve(__dirname, 'src/vendor'),
+  },
+  ...
+  output: {
+     path: path.resolve(__dirname, 'dist'),
+     publicPath: '/',
+     filename: '[name].js'
+  },
+ ...
+  plugins: [
+    new webpack.optimize.CommonsChunkPlugin({
+         name: 'vendor' // syncs with entry: 'vendor' prop-name
+      })
+  ]
+```
+
+### Cache Busting
+- create a hash as a filename that changes when the code changes. this tells the browser to update the cache
+.
+
+- in `webpack.config.prod.js`
+
+```
+  import WebpackMd5Hash from 'html-md5-hash'
+
+  ...
+  output: {
+     path: path.resolve(__dirname, 'dist'),
+     publicPath: '/',
+     filename: '[name].[chunkhash].js'
+  },
+  ...
+  plugins: [
+    new WebpackMd5Hash()
+  ]
+```
+### Extract + Minify CSS
+  ```
+  import ExtractTextPlugin from 'extract-text-webpack-plugin';
+
+  ...
+  plugins[
+    ...
+    new ExtractTextPlugin('[name].[contenthash].css')
+
+  ]
+  ...
+  module: {
+    loaders: [
+       ...
+       {test: /\.css$/, loader: ExtractTextPlugin.extract('css?sourceMap')}
+    ]
+  }   
+  ```
+
+### Production Error Logging
+- Examples: TrackJS, Sentry, New Relic, Raygun
+- Considerations:
+  + Browser
+  + Stack Traces
+  + Previous Actions
+  + Custom API for enhanced tracking
+  + Notifications
+  + Integrations
