@@ -475,3 +475,15 @@ import react from 'react';
   + Custom API for enhanced tracking
   + Notifications
   + Integrations
+
+
+
+### Production Error Logging
+- Examples: TrackJS, Sentry, New Relic, Raygun
+- Considerations:
+  + Browser
+  + Stack Traces
+  + Previous Actions
+  + Custom API for enhanced tracking
+  + Notifications
+  + Integrations

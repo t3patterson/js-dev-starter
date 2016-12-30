@@ -19,8 +19,8 @@
     "clean-dist" : "rimraf ./dist && mkdir dist",
     "prebuild" : "npm-run-all clean-dist test lint",
     "build" : "babel-node build-scripts/build.js",
-    "postbuild" : "babel-node build-scripts/dist-server.js"
-  
+    "postbuild" : "babel-node build-scripts/dist-server.js",
+    "deploy" : "babel-node build-scripts/deploy.js"
 },
   "author": "Cory House",
   "license": "MIT",

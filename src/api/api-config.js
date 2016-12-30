@@ -1,5 +1,5 @@
 let apiConfig = {
-   productionBaseUrl: "/",
+   productionBaseUrl: "/", //e.g.: http://t3-simple-api.herokuapp.com/
    developmentBaseUrl: "http://localhost:4000/"
 }
 
